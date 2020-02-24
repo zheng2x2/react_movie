@@ -1,17 +1,58 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Movie from './Movie';
 
-const movieTitles = [
-  "Matrix", "Full Metal Jacker", "Oldboy", "Star Wars"
-]
-function App() {
+
+// function App() {
+class App extends React.Component {
+  state = {
+    greeting : "Hello!",
+    movies : [
+      {
+        title : "Matrix",
+        poster : "https://placeimg.com/200/300/1"
+      },
+      {
+        title : "Full Metal Jacket",
+        poster : "https://placeimg.com/200/300/2"
+      },
+      {
+        title : "Oldboy",
+        poster : "https://placeimg.com/200/300/3"
+      },
+      {
+        title : "Star Wars",
+        poster : "https://placeimg.com/200/300/4"
+      }
+    ]
+  }
+
+  componentDidMount(){
+    setTimeout(() => {
+      console.log("hello");
+      this.setState({
+        movies : [
+          ...this.state.movies,
+          {
+            title : "Frozen",
+            poster : "https://placeimg.com/200/300/5"
+          }
+        ]
+      })
+    }, 5000)
+  }
+
+  render(){
   return (
     <div className="App">
-      <Movie/>
+      {this.state.greeting}
+      {this.state.movies.map((m, id) => {
+        return <Movie title={m.title} poster={m.poster} key={id} />
+      })}
+      
     </div>
   );
+  }
 }
 
 export default App;
