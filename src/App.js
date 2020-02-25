@@ -6,52 +6,70 @@ import Movie from './Movie';
 // function App() {
 class App extends React.Component {
   state = {
-    greeting : "Hello!",
-    movies : [
-      {
-        title : "Matrix",
-        poster : "https://placeimg.com/200/300/1"
-      },
-      {
-        title : "Full Metal Jacket",
-        poster : "https://placeimg.com/200/300/2"
-      },
-      {
-        title : "Oldboy",
-        poster : "https://placeimg.com/200/300/3"
-      },
-      {
-        title : "Star Wars",
-        poster : "https://placeimg.com/200/300/4"
-      }
-    ]
+  //   movies : [
+  //     {
+  //       title : "Matrix",
+  //       poster : "https://placeimg.com/200/300/1"
+  //     },
+  //     {
+  //       title : "Full Metal Jacket",
+  //       poster : "https://placeimg.com/200/300/2"
+  //     },
+  //     {
+  //       title : "Star Wars",
+  //       poster : "https://placeimg.com/200/300/4"
+  //     }
+  //   ]
   }
 
   componentDidMount(){
-    setTimeout(() => {
-      console.log("hello");
-      this.setState({
-        movies : [
-          ...this.state.movies,
-          {
-            title : "Frozen",
-            poster : "https://placeimg.com/200/300/5"
-          }
-        ]
-      })
-    }, 5000)
+    this._getMovies()
+    
+    // setTimeout(() => {
+    //   this.setState({
+    //     movies : [
+    //       // ...this.state.movies,
+    //       {
+    //         title : "Frozen",
+    //         poster : "https://placeimg.com/200/300/5"
+    //       }
+    //     ]
+    //   })
+    // }, 3000)
   }
 
+  _getMovies = async () => {
+    const movies = await this._callApi();
+    this.setState({
+      movies : movies
+    })
+  }
+
+  _callApi = () => {
+    return fetch('https://yts.mx/api/v2/list_movies.json?sort_by=rating')
+    .then(res => res.json())
+    .then(json => json.data.movies )
+    .catch(err => console.log(err))
+  }
+
+  _renderMovies = () => {
+    const movies = this.state.movies.map(m => {
+      return <Movie title={m.title_english} 
+                    poster={m.medium_cover_image} 
+                    key={m.id} 
+                    genres={m.genres}
+                    synopsis={m.synopsis}
+              />
+    });
+    return movies;
+  }
+  
   render(){
-  return (
-    <div className="App">
-      {this.state.greeting}
-      {this.state.movies.map((m, id) => {
-        return <Movie title={m.title} poster={m.poster} key={id} />
-      })}
-      
-    </div>
-  );
+    return (
+      <div className="App">
+        {this.state.movies ? this._renderMovies() : 'Loading ...'}
+      </div>
+    );
   }
 }
 
