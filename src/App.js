@@ -46,7 +46,7 @@ class App extends React.Component {
   }
 
   _callApi = () => {
-    return fetch('https://yts.mx/api/v2/list_movies.json?sort_by=download_count')
+    return fetch('https://yts.mx/api/v2/list_movies.json?sort_by=rating')
     .then(res => res.json())
     .then(json => json.data.movies )
     .catch(err => console.log(err))
